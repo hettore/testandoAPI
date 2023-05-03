@@ -1,0 +1,74 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consulta CEP</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container-fluid">
+    <h1>Consulta de CEP</h1>
+    <form method="POST" action="/">
+        <div class="form-group">
+            <label for="nome">Estudante</label>
+            <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome do estudante" value="{{ nome }}">
+        </div>
+
+        <div class="form-group">
+            <label for="cep">CEP</label>
+            <input type="text" class="form-control" id="cep" name="cep" placeholder="Digite o CEP" value="{{ cep }}">
+        </div>
+        <div class="form-group">
+            <label for="rua">Rua</label>
+            <input type="text" class="form-control" id="rua" name="rua" placeholder="Rua" value="{{ rua }}">
+        </div>
+        <div class="form-group">
+            <label for="numero">Nº</label>
+            <input type="text" class="form-control" id="numero" name="numero" placeholder="Informe o número" value="{{ numero }}">
+        </div>
+        <div class="form-group">
+            <label for="cidade">Cidade</label>
+            <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade" value="{{ cidade }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Consultar</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    //Aqui precisamos escrever um código em linguagem JavaScript
+    //Este código será responsável por fazer uma chamada à rota de consulta de CEPs quando o campo CEP perder o foco (quando o usuário apertar TAB, por exemplo!)
+    
+    // Esta linha fica escutando o campo cep, e ativa uma função quando ele perde o foco (blur)
+    $('#cep').on('blur', function () {
+        // Esta linha cria uma variavel chamada cep e guarda o cep dentro dela
+        var cep = $(this).val();
+        // Esta linha faz uma chamada ajax para uma api
+        // uma chamada ajasx é uma chamada assincrona, ou seja, chamamos a api e 
+        // a resposta é recebida de maneira assincrona
+        $.getJSON('/busca_cep', {cep:cep})
+            // aqui temos algo similar a um if. Caso o retorno seja de sucesso, executamos
+            // a parte do .done
+            .done(function (data) {
+                $('#rua').val(data.rua);
+                $('#cidade').val(data.cidade);
+            })
+            // Aqui temos a parte do fracasso, ou seja, a api não retornou nada
+            .fail(function () {
+                $('#rua').val('');
+                $('#cidade').val('');
+            });
+    });
+
+</script>
+
+</body>
+</html>
